@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Paintable
+  - Platform
+  - Up
+  - Back
+  - Down
+  - paint
   layers:
   - Default
   - TransparentFX

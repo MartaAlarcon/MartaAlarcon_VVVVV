@@ -560,8 +560,8 @@ Transform:
   m_GameObject: {fileID: 332652722}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.8059, y: 3.7552218, z: 0.03311235}
-  m_LocalScale: {x: 4.2801547, y: 2.0502698, z: 1}
+  m_LocalPosition: {x: -8.5103, y: 3.7552218, z: 0.03311235}
+  m_LocalScale: {x: 4.871244, y: 2.0502698, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1089101418}
@@ -1373,6 +1373,7 @@ GameObject:
   - component: {fileID: 1536195455}
   - component: {fileID: 1536195454}
   - component: {fileID: 1536195453}
+  - component: {fileID: 1536195457}
   m_Layer: 0
   m_Name: Yellow
   m_TagString: Paintable
@@ -1505,6 +1506,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1089101418}
   m_LocalEulerAnglesHint: {x: 0, y: -0.314, z: 180}
+--- !u!114 &1536195457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1536195452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faa10574f1d5c5842b2839e2dcfef6f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  platformID: yellow
 --- !u!1 &1891650609
 GameObject:
   m_ObjectHideFlags: 0
