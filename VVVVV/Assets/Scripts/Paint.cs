@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Paint : MonoBehaviour
 {
+    public SpriteRenderer paint;
     private Rigidbody2D Rigidbody2D;
     [SerializeField] private float speed = 0.1f;
     // Start is called before the first frame update
@@ -22,7 +23,7 @@ public class Paint : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Paintable") || collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Platform") || collision.gameObject.CompareTag("Player"))
         {
             Spawner.spawner.Push(this.gameObject);
         }

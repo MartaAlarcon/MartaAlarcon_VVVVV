@@ -15,14 +15,8 @@ public class CubiController : MonoBehaviour
     private Animator animator;
     private Rigidbody2D rigidbody2D;
     private bool isGrounded = false;
-
-    [Header("Auto-Movement")]
     public Vector3 startPosition;   
     public Vector3 endPosition;
-    public Vector3 targetPosition;  
-    public float moveDuration = 2f; 
-    private bool autoMoving = true; 
-
 
     [Header("Color")]
     private Color paintableColor;  
@@ -40,8 +34,6 @@ public class CubiController : MonoBehaviour
     private void Start()
     {
         transform.position = startPosition;
-        StartCoroutine(MoveToScene()); // Iniciar el movimiento automático en la escena actual
-
     }
 
 
@@ -63,7 +55,6 @@ public class CubiController : MonoBehaviour
 
     void Movement()
     {
-        if (autoMoving) return; // Evitar mover el personaje durante el movimiento automático
 
         float inputMovement = Input.GetAxis("Horizontal");
         rigidbody2D.velocity = new Vector2(inputMovement * speed, rigidbody2D.velocity.y);
@@ -98,7 +89,6 @@ public class CubiController : MonoBehaviour
 
     void ChangeGravity()
     {
-        if (autoMoving) return;  // Evitar cambiar la gravedad durante el movimiento automático
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded) 
         {
@@ -136,27 +126,22 @@ public class CubiController : MonoBehaviour
 
     public void ChangeCubiColor(Color color)
     {
-        if (autoMoving) return;  // Evitar cambiar el color durante el movimiento automático
         paint.color = color;  
     }
 
     public void ChangePlatformColor(Color color)
     {
-        if (autoMoving) return;  // Evitar cambiar el color durante el movimiento automático
-
         if (currentPaintableSprite != null)
         {
-            currentPaintableSprite.color = color;  // Cambiar el color de la plataforma pintable
+            // Verificamos si la plataforma es pintable
+            PaintablePlatformController paintablePlatform = currentPaintableSprite.GetComponent<PaintablePlatformController>();
+            if (paintablePlatform != null)
+            {
+                paintablePlatform.SetPlatformColor(color);  // Cambiar y guardar el color de la plataforma pintable
+            }
         }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Up"))
-        {
-            up = true;
-            GameManager.gameManager.LoadNextScene();
-        }
-    }
+
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -171,21 +156,59 @@ public class CubiController : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Back"))
         {  
+            everythingPainted = !everythingPainted;
             back = true;
             GameManager.gameManager.LoadPreviousScene();            
         }
-       
-
+        if (collision.gameObject.CompareTag("Up"))
+        {
+            if (everythingPainted)
+            {
+                up = true;
+                everythingPainted = false;
+                GameManager.gameManager.LoadNextScene();
+            }
+            else
+            {
+                Respawn();
+            }
+        }
+        if (collision.gameObject.CompareTag("Down"))
+        {
+            if (everythingPainted)
+            {
+                up = true;
+                everythingPainted = false;
+                GameManager.gameManager.LoadNextScene();
+            }
+            else
+            {
+                transform.position = new Vector3(-10f,0,0);
+            }
+        }
         if (collision.gameObject.CompareTag("Respawn"))
         {
-            transform.position = new Vector3(-7.93f, -2.55f);
-            if (rigidbody2D.gravityScale == -1)
+            Respawn();
+        }
+        if (collision.gameObject.CompareTag("paint"))
+        {
+            Paint paintScript = collision.gameObject.GetComponent<Paint>();  
+            if (paintScript != null)
             {
-                transform.rotation = Quaternion.identity;
-                rigidbody2D.gravityScale *= -1;
+                ChangeCubiColor(paintScript.paint.color); 
             }
         }
     }
+
+    private void Respawn() 
+    {
+        transform.position = startPosition;
+        if (rigidbody2D.gravityScale == -1)
+        {
+             transform.rotation = Quaternion.identity;
+             rigidbody2D.gravityScale *= -1;
+        }
+    } 
 
     private void OnCollisionStay2D(Collision2D collision)
     {
@@ -193,7 +216,7 @@ public class CubiController : MonoBehaviour
         {
             PlatformController platform = collision.gameObject.GetComponent<PlatformController>();
             isGrounded = true;
-
+           
             if (platform != null)
             {
                 currentPlatformColor = platform.GetPlatformColor();  // Recoge el color de la plataforma
@@ -233,31 +256,7 @@ public class CubiController : MonoBehaviour
                Mathf.Abs(a.b - b.b) < tolerance;
     }
 
-    IEnumerator MoveToScene()
-    {
-        float elapsedTime = 0f;
-        Vector3 initialPosition = transform.position;
-
-        rigidbody2D.isKinematic = true;
-
-        transform.localScale = new Vector3(1, 1, 1);
-
-        animator.SetFloat("MoveX", 1); 
-
-        while (elapsedTime < moveDuration)
-        {
-            transform.position = Vector3.Lerp(initialPosition, targetPosition, elapsedTime / moveDuration);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        transform.position = targetPosition;
-
-        animator.SetFloat("MoveX", 0); 
-
-        rigidbody2D.isKinematic = false;
-        autoMoving = false;
-    }
+   
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
