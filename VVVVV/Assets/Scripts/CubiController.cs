@@ -145,6 +145,11 @@ public class CubiController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            paint.color = Color.black;
+            transform.position = new Vector3(-23f, -13,0);
+        }
         if (collision.gameObject.CompareTag("Finish"))
         {
             if (everythingPainted)

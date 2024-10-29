@@ -10,6 +10,7 @@ TagManager:
   - Back
   - Down
   - paint
+  - Enemy
   layers:
   - Default
   - TransparentFX
