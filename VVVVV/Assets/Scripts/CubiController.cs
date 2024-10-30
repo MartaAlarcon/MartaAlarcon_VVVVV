@@ -275,7 +275,12 @@ public class CubiController : MonoBehaviour
     */
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        UpdatePaintableColor(); 
+        UpdatePaintableColor();
+        if (scene.name == "FirstScene")
+        {
+            transform.position = startPosition; 
+            paint.color = Color.white; 
+        }
         if (next)
         {
             transform.position = new Vector3(startPosition.x, transform.position.y, transform.position.z); // Restablecer la posición del personaje

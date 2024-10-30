@@ -18,6 +18,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("PauseMenu");
+        }
+
+    }
     //cargar la siguiente escena por índice
     public void LoadNextScene()
     {
