@@ -13,4 +13,9 @@ public class ButtonActions : MonoBehaviour
         Application.Quit();
 
     }
+    public void ReloadGame()
+    {
+        PlatformStateController.ClearPlatformStates();
+        SceneManager.LoadScene("FirstScene");
+    }
 }
