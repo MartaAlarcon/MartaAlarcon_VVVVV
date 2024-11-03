@@ -26,6 +26,9 @@ public class CubiController : MonoBehaviour
     private bool everythingPainted = false;
     private SpriteRenderer currentPaintableSprite;
 
+    public AudioSource audioPaint;
+    public AudioSource audioPainted;
+    public AudioSource audioGravity;
 
     private bool back = false;
     private bool next = false;
@@ -34,6 +37,13 @@ public class CubiController : MonoBehaviour
     private void Start()
     {
         transform.position = startPosition;
+        if (audioPaint == null || audioPainted == null || audioGravity == null)
+        {
+            AudioSource[] audioSources = GetComponents<AudioSource>();
+            audioPaint = audioSources[0];
+            audioPainted = audioSources[1];
+            audioGravity = audioSources[2];
+        }
     }
 
 
@@ -95,6 +105,7 @@ public class CubiController : MonoBehaviour
             rigidbody2D.gravityScale *= -1;
             isGrounded = false;
             transform.Rotate(0f, 0f, 180f);
+            audioGravity.Play();
         }
     }
 
@@ -126,18 +137,20 @@ public class CubiController : MonoBehaviour
 
     public void ChangeCubiColor(Color color)
     {
-        paint.color = color;  
+        paint.color = color;
+        audioPaint.Play();
     }
 
     public void ChangePlatformColor(Color color)
     {
         if (currentPaintableSprite != null)
         {
-            // Verificamos si la plataforma es pintable
             PaintablePlatformController paintablePlatform = currentPaintableSprite.GetComponent<PaintablePlatformController>();
             if (paintablePlatform != null)
             {
                 paintablePlatform.SetPlatformColor(color);  // Cambiar y guardar el color de la plataforma pintable
+                audioPainted.Play();
+
             }
         }
     }
@@ -266,13 +279,6 @@ public class CubiController : MonoBehaviour
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
-
-    /*
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-    */
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         UpdatePaintableColor();
@@ -288,7 +294,7 @@ public class CubiController : MonoBehaviour
         }
         if (back)
         {
-            transform.position = new Vector3(endPosition.x, transform.position.y, transform.position.z); // Restablecer la posición del personaje
+            transform.position = new Vector3(transform.position.x, 6f, transform.position.z); // Restablecer la posición del personaje
             back = false;
         }
         if (up)
