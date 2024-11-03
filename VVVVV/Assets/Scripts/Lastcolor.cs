@@ -5,7 +5,6 @@ public class Lastcolor : MonoBehaviour
 {
 
     public float colorTolerance = 0.1f;
-
     void Update()
     {
         
